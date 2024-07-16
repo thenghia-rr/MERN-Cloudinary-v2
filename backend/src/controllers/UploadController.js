@@ -3,7 +3,7 @@
 // cần import uploadToCloudinary sau câu lệnh dotenv.config(), nếu không sẽ báo lỗi thiếu API Key
 import dotenv from "dotenv";
 dotenv.config();
-import uploadToCloudinary from "../utils/cloudinary.js";
+import {uploadToCloudinary} from "../utils/cloudinary.js";
 
 const uploadImage = async (req, res, next) => {
   if (!req.file) {

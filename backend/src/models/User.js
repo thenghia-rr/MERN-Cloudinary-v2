@@ -4,6 +4,7 @@ const UserSchema = new Schema(
   {
     name: { type: String, required: true },
     avatar: { type: String, default: "" },
+    avatarId: { type: String, default: "" },
   },
   {
     timestamps: true,

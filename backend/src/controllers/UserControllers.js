@@ -1,6 +1,10 @@
 import UserModel from "../models/User.js";
-import uploadToCloudinary from "../utils/cloudinary.js";
+import {
+  deleteFromCloudinary,
+  uploadToCloudinary,
+} from "../utils/cloudinary.js";
 
+// [POST] /api/users
 const createUser = async (req, res, next) => {
   try {
     const { name } = req.body;
@@ -13,7 +17,7 @@ const createUser = async (req, res, next) => {
       return res.status(400).json({ message: "Avatar is required" });
     }
 
-    const file = req.file || ""
+    const file = req.file || "";
     const img_url = await uploadToCloudinary(file);
 
     console.log(img_url);
@@ -21,6 +25,7 @@ const createUser = async (req, res, next) => {
     const newUser = new UserModel({
       name,
       avatar: img_url.secure_url,
+      avatarId: img_url.public_id,
     });
 
     await newUser.save();
@@ -31,6 +36,7 @@ const createUser = async (req, res, next) => {
   }
 };
 
+// [GET] /api/users
 const getAllUsers = async (req, res, next) => {
   try {
     const users = await UserModel.find({});
@@ -45,4 +51,27 @@ const getAllUsers = async (req, res, next) => {
   }
 };
 
-export { createUser, getAllUsers };
+// [DELETE] /api/users/:userId
+const deleteUser = async (req, res, next) => {
+  try {
+    const userId = req.params.userId
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    await deleteFromCloudinary(user.avatarId);
+    await UserModel.deleteOne({_id: userId})
+
+    return res.json({
+      message: "User deleted successfully",
+    });
+
+  } catch (error) {
+    console.log(error.message);
+    next(error);
+  }
+};
+
+export { createUser, getAllUsers, deleteUser };
