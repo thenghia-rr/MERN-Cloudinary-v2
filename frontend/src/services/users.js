@@ -37,5 +37,17 @@ const getAllUsers = async () => {
   }
 };
 
+const deleteUser = async ({ userId }) => {
+  try {
+    const { data } = await axios.delete(`${API_URL}/api/users/${userId}`);
+    return data;
+  } catch (error) {
+    if (error.response && error.response.data.message) {
+      throw new Error(error.response.data.message);
+    } else {
+      throw new Error(error.message);
+    }
+  }
+};
 
- export { createUser, getAllUsers};
+export { createUser, getAllUsers, deleteUser };

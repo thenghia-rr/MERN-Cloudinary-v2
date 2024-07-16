@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { QueryClient, useMutation } from "@tanstack/react-query";
-import { createUser } from "../services/uploads";
+import { createUser } from "../services/users";
 
 const Upload = () => {
   const [name, setName] = useState("");
